@@ -32,7 +32,7 @@ module.exports.createListing = async (req, res) => {
 
   // Geocode the location using MapTiler API
   const geoRes = await axios.get(
-    `https://api.maptiler.com/geocoding/${encodeURIComponent(location + ", " + country)}.json?key=${process.env.MAP_TOKEN}`
+    `https://api.maptiler.com/geocoding/${encodeURIComponent(location + ", " + country)}.json?key=${process.env.MAPTILER_API_KEY}`
   );
 
   const coords = geoRes.data.features[0]?.geometry?.coordinates || [0, 0];
@@ -45,24 +45,14 @@ module.exports.createListing = async (req, res) => {
       coordinates: coords,  // [lng, lat] from MapTiler
     },
   });
-
+  let url = req.file.path;
+  let filename = req.file.filename;
+  newListing.image = {url,filename};
   await newListing.save();
   req.flash("success", "New listing created!");
   res.redirect("/listings");
 };
-/*module.exports.createListing = async (req, res) => {
 
-    let url = req.file.path;
-    let filename = req.file.filename;
-
-    const newListing = new Listing(req.body.listing);
-    newListing.owner = req.user._id;
-    newListing.image = {url,filename};
-    await newListing.save();
-    req.flash("success" , "New listing created!");
-    res.redirect("/listings");
-   
-};*/
 module.exports.renderEditForm = async (req,res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id);
