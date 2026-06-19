@@ -1,31 +1,66 @@
 <% layout("/layouts/boilerplate") %>
+<div class="auth-page"></div>
 
-<div class="row mt-3">
- <h1 class="col-6 offset-3">Login</h1>
-  <div class="col-6 offset-3">
-    <form action="/login" method="POST" class="needs-validation" novalidate>
-        <div class="mb-3">
-        <label for= "username" class="form-label">Username</label>
-        <input 
-          name="username" 
-          id="username"
-          type="text" 
-          class="form-control" 
-          required
-        >
-      </div>
+<div class="container py-5">
+    <div class="auth-container">
 
-      <div class="mb-3">
-        <label for= "password" class="form-label">Password</label>
-        <input 
-          name="password" 
-          id="password"
-          type="password" 
-          class="form-control" 
-          required
-        >
-      </div>
-      <button class="btn btn-success">Login</button>
-    </form>
- </div>
+        <!-- Left Side -->
+        <div class="auth-form-section">
+
+            <h1>Welcome back</h1>
+            <p class="subtitle">
+                Log in to continue your journey
+            </p>
+
+            <form action="/login" method="POST" class="needs-validation" novalidate>
+
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input
+                        type="text"
+                        name="username"
+                        class="form-control custom-input"
+                        placeholder="Enter your username"
+                        required
+                    >
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Password</label>
+                    <input
+                        type="password"
+                        name="password"
+                        class="form-control custom-input"
+                        placeholder="Enter your password"
+                        required
+                    >
+                </div>
+
+                <button class="btn login-btn w-100">
+                    Log In
+                </button>
+
+                
+
+                <p class="signup-text">
+                    New to Rentora?
+                    <a href="/signup">Create an account</a>
+                </p>
+
+            </form>
+
+        </div>
+
+        <!-- Right Side -->
+        <div class="auth-image-section">
+            <img
+                src="/images/dashboard2.png"
+                alt="Luxury House"
+            >
+           
+        </div>
+
+    </div>
+
+</div>
 </div>

@@ -18,6 +18,7 @@ const User = require("./models/user.js");
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
+const staticRoutes = require("./routes/static.js");
 
 
 const dbUrl = process.env.ATLASDB_URL;
@@ -50,7 +51,7 @@ const store = MongoStore.create({
     touchAfter : 24 * 3600,
 });
 
-store.on("error" , () => {
+store.on("error" , (err) => {
     console.log("ERROR IN MONGO SESSION STORE",err);
 });
 
@@ -66,9 +67,6 @@ const sessionOptions = {
     }
 };
 
-/*app.get("/", (req,res) => {
-    res.send("Hi! I am root");
-});*/
 app.use(session(sessionOptions));
 app.use(flash());
 
@@ -80,6 +78,9 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use((req,res,next) => {
+
+    console.log("Locals middleware running"); 
+    console.log("User:", req.user);
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
     res.locals.currUser = req.user;
@@ -88,6 +89,7 @@ app.use((req,res,next) => {
 app.use("/listings" , listingRouter);
 app.use("/listings/:id/reviews" , reviewRouter);
 app.use("/",userRouter);
+app.use("/", staticRoutes);
 
 app.use((req,res,next) => {
     next(new ExpressError(404, "Page not found!"));

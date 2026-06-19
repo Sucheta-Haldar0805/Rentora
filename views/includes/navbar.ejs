@@ -1,49 +1,125 @@
-<style>
-  .btn-search {
-    background-color: #fe424d;
-    color:#fff;
-    border-radius: 25px;
-    padding : 0 1rem 0 1rem;
-  }
-  .btn-search :hover{
-    background-color: #fe424d;
-    color:#fff;
-  }
-  .btn-search i {
-    display : inline;
-    margin-right: 0.5rem;
-  }
-</style>
 
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/listings"><i class="fa-regular fa-compass"></i></a>
+    <a class="navbar-brand d-flex align-items-center" href="/listings">
+      <img src="/images/logo2.png" alt="Rentora" class="logo">
+      <span class="brand-name">
+        Rent
+        <span class="key-o">
+            <span class="keyhole"></span>
+        </span>
+        ra
+  </a>
     <button class="navbar-toggler" type="button" 
         data-bs-toggle="collapse" 
         data-bs-target="#navbarNavAltMarkup"
     >
     <span class="navbar-toggler-icon"></span>
+    <h1>Rentora</h1>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-link" href="/listings">Explore</a>
-      </div>
-      <div class="navbar-nav ms-auto">
-        <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search destinations"/>
-        <button class="btn btn-search" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
-      </form>
-      </div>
+    <div class="navbar-nav ms-4">
+      <a class="nav-link explore fw-semibold" href="/listings">
+          Explore
+      </a>
+    </div>
 
-      <div class="navbar-nav ms-auto">
-        <a class="nav-link" href="/listings/new">Airbnb your home</a>
-        <% if(!currUser) { %> 
-        <a class="nav-link " href="/signup"><b>Sign up</b></a>
-        <a class="nav-link" href="/login"><b>Log in</b></a>
-        <% } %> <% if(currUser) { %> 
-        <a class="nav-link" href="/logout"><b>Log out</b></a>
+
+<div class="search-wrapper">
+
+<form action="/listings" method="GET" class="search-bar" id="navSearchForm">
+
+    <!-- Main search -->
+    <input
+        type="text"
+        name="q"
+        placeholder="Search destinations..."
+        class="search-input"
+        value="<%= locals.q || '' %>"
+        onfocus="document.getElementById('filterDropdown').classList.add('show')"
+    >
+
+    <!-- Filter button -->
+    <button type="button" class="filter-toggle-btn" id="filterBtn">
+      <i class="fa-solid fa-sliders"></i>
+    </button>
+
+
+    <!-- Search submit -->
+    <button type="button" class="search-btn" id="searchFocusBtn">
+        <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+
+
+    <!-- Dropdown filters -->
+    <div class="filter-dropdown" id="filterDropdown">
+
+        <input 
+            type="number"
+            name="minPrice"
+            placeholder="Min Price"
+            value="<%= locals.minPrice || '' %>"
+        >
+
+        <input 
+            type="number"
+            name="maxPrice"
+            placeholder="Max Price"
+            value="<%= locals.maxPrice || '' %>"
+        >
+
+        <input 
+            type="number"
+            step="0.1"
+            name="minRating"
+            placeholder="Minimum Rating"
+            value="<%= locals.minRating || '' %>"
+        >
+
+    </div>
+
+</form>
+
+</div>
+
+
+
+<div class="navbar-nav ms-auto align-items-center">
+        <% if(currUser) { %>
+            <li class="nav-item">
+                <a class="nav-link " href="/wishlist">
+                    <i class="fa-solid fa-heart icon"></i> Wishlist
+                </a>
+            </li>
         <% } %>
-      </div>
+
+    <% if(currUser) { %>
+
+        <a href="/listings/new" class="nav-link fw-semibold me-3">
+            Become a Host
+        </a>
+
+        <a href="/logout" class="nav-link fw-semibold me-3">
+            Log Out
+        </a>
+
+    <% } else { %>
+
+        <a href="/signup" class="nav-link fw-semibold me-3">
+            Sign Up
+        </a>
+
+        <a href="/login" class="nav-link fw-semibold me-3">
+            Log In
+        </a>
+
+    <% } %>
+
+    <button id="theme-toggle" class="theme-btn">
+        <i class="fa-solid fa-moon"></i>
+    </button>
+
+</div>
     </div>
   </div>
 </nav>

@@ -1,0 +1,62 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="wishlist-header">
+    <h1> My Wishlist</h1>
+    <p>Your saved dream stays and favorite destinations.</p>
+</div>
+
+<% if (listings.length === 0) { %>
+
+<div class="empty-wishlist">
+    <i class="fa-solid fa-heart-crack"></i>
+    <h2>Your wishlist is empty</h2>
+    <p>Save places you love and they'll appear here.</p>
+
+    <a href="/listings" class="btn btn-dark">
+        Explore Stays
+    </a>
+</div>
+
+<% } else { %>
+
+<div class="row">
+    <% listings.forEach(listing => { %>
+
+    <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+        <div class="card wishlist-card">
+
+            <img src="<%= listing.image.url %>"
+                 class="card-img-top"
+                 alt="<%= listing.title %>">
+
+            <div class="card-body">
+                <h5 class="card-title"><%= listing.title %></h5>
+                <p class="card-text"><%= listing.location %></p>
+
+                <div class="d-flex gap-2">
+
+                    <a href="/listings/<%= listing._id %>"
+                       class="btn view-btn">
+                        View Stay
+                    </a>
+
+                    <form action="/wishlist/<%= listing._id %>?_method=DELETE"
+                          method="POST">
+
+                        <button type="submit"
+                                class="btn btn-outline-danger remove-btn">
+                            Remove
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <% }) %>
+</div>
+
+<% } %>

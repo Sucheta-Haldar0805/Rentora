@@ -1,9 +1,69 @@
 const Listing = require("../models/listing");
-const axios = require("axios"); // npm install axios
+const axios = require("axios"); 
 
-module.exports.index = async (req,res) => {
-     const allListings = await Listing.find({});
-     res.render("listings/index.ejs" , {allListings});
+
+module.exports.index = async (req, res) => {
+
+    let { q, minPrice, maxPrice, minRating } = req.query;
+
+    let filter = {};
+
+
+    // Search title, location, country
+    if(q) {
+
+        filter.$or = [
+            { title: { $regex: q, $options: "i" } },
+            { location: { $regex: q, $options: "i" } },
+            { country: { $regex: q, $options: "i" } }
+        ];
+
+    }
+
+
+    // Minimum price
+    if(minPrice) {
+
+        filter.price = {
+            ...filter.price,
+            $gte: Number(minPrice)
+        };
+
+    }
+
+
+    // Maximum price
+    if(maxPrice) {
+
+        filter.price = {
+            ...filter.price,
+            $lte: Number(maxPrice)
+        };
+
+    }
+
+
+    // Rating filter
+    if(minRating) {
+
+        filter.rating = {
+            $gte: Number(minRating)
+        };
+
+    }
+
+
+    const listings = await Listing.find(filter).populate("reviews");;
+
+
+    res.render("listings/index.ejs", {
+        listings,
+        q,
+        minPrice,
+        maxPrice,
+        minRating
+    });
+
 };
 
 module.exports.renderNewForm = (req,res) => {
@@ -53,6 +113,21 @@ module.exports.createListing = async (req, res) => {
   res.redirect("/listings");
 };
 
+module.exports.filterCategory = async (req, res) => {
+    const { category } = req.params;
+
+    const listings = await Listing.find({ category })
+    .populate("reviews");
+
+    res.render("listings/index.ejs", {
+        listings,
+        q: "",
+        minPrice: "",
+        maxPrice: "",
+        minRating: ""
+    });
+};
+
 module.exports.renderEditForm = async (req,res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id);
@@ -86,3 +161,4 @@ module.exports.destroyListing = async(req,res) => {
      req.flash("success" , "Listing Deleted!");
      res.redirect("/listings");
 };
+

@@ -3,10 +3,11 @@ const router = express.Router({mergeParams : true });
 const User = require("../models/user.js");
 const wrapAsync = require("../utils/wrapAsync.js");
 const passport = require("passport");
-const {saveRedirectUrl} = require("../middleware.js");
+const {saveRedirectUrl , isLoggedIn} = require("../middleware.js");
 
 
 const userController = require("../controllers/users.js");
+
 
 router.route("/signup")
     .get(userController.renderSignupForm)
@@ -21,5 +22,11 @@ router.route("/login")
 );
 
 router.get("/logout" , userController.logout);
+
+router.post("/wishlist/:listingId", isLoggedIn, userController.addToWishlist);
+
+router.delete("/wishlist/:listingId", isLoggedIn, userController.removeFromWishlist);
+
+router.get("/wishlist", isLoggedIn, userController.showWishlist);
 
 module.exports = router;

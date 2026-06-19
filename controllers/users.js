@@ -29,9 +29,12 @@ module.exports.renderLoginForm = (req,res) => {
 };
 
 module.exports.login = async(req,res) => {
-     req.flash("success","Welcome Back to Rentora!");
-     let redirectUrl = res.locals.redirectUrl || "/listings";
-     res.redirect(redirectUrl);
+    console.log("=== LOGIN SUCCESS ===");
+    console.log("req.user:", req.user);
+    console.log("isAuthenticated:", req.isAuthenticated());
+
+    req.flash("success","Welcome Back to Rentora!");
+    res.redirect("/listings");
 };
 
 module.exports.logout = (req,res,next) => {
@@ -42,4 +45,42 @@ module.exports.logout = (req,res,next) => {
         req.flash("success","you are logged out!");
         res.redirect("/listings");
     });
+};
+
+module.exports.addToWishlist = async (req, res) => {
+    const { listingId } = req.params;
+
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+        req.flash("error", "User not found");
+        return res.redirect("/login");
+    }
+
+    if (!user.wishlist) user.wishlist = [];
+
+    if (!user.wishlist.includes(listingId)) {
+        user.wishlist.push(listingId);
+        await user.save();
+    }
+
+    req.flash("success", "Added to wishlist!");
+    res.redirect("/listings");
+};
+
+module.exports.removeFromWishlist = async (req, res) => {
+    const { listingId } = req.params;
+
+    await User.findByIdAndUpdate(req.user._id, {
+        $pull: { wishlist: listingId }
+    });
+
+    req.flash("success", "Removed from wishlist!");
+    res.redirect("/listings");
+};
+
+module.exports.showWishlist = async (req, res) => {
+    const user = await User.findById(req.user._id).populate("wishlist");
+
+    res.render("users/wishlist.ejs", { listings: user.wishlist });
 };
