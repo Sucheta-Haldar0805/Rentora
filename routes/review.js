@@ -9,6 +9,35 @@ const {validateReview , isLoggedIn ,isreviewAuthor} = require("../middleware.js"
 const reviewController = require("../controllers/review.js");
 //POST  Review Route
 router.post("/", isLoggedIn, validateReview, wrapAsync(reviewController.createReview));
+
+// EDIT REVIEW PAGE
+router.get(
+    "/:reviewId/edit",
+    isLoggedIn,
+    isreviewAuthor,
+    wrapAsync(async(req,res)=>{
+
+        let { id, reviewId } = req.params;
+
+        const review = await Review.findById(reviewId);
+
+        res.render("reviews/edit.ejs", {
+            review,
+            id
+        });
+
+    })
+);
+
+// UPDATE REVIEW
+router.put(
+    "/:reviewId",
+    isLoggedIn,
+    isreviewAuthor,
+    wrapAsync(reviewController.updateReview)
+);
+
+
 //Delete Review Route
 router.delete("/:reviewId",isLoggedIn,isreviewAuthor, wrapAsync(reviewController.destroyReview));
 

@@ -1,0 +1,157 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+h2{
+ margin-top:10px;
+}
+</style>
+
+
+<h2>
+ <b>Book :</b> <%= listing.title %>
+</h2>
+
+
+<form id="bookingForm">
+
+
+<label>
+Check In
+</label>
+
+<input 
+type="date"
+id="checkIn"
+name="checkIn"
+class="form-control"
+required>
+
+<br>
+
+
+<label>
+Check Out
+</label>
+
+<input 
+type="date"
+id="checkOut"
+name="checkOut"
+class="form-control"
+required>
+
+
+<br>
+
+
+<label>
+Guests
+</label>
+
+<input 
+type="number"
+id="guests"
+name="guests"
+class="form-control"
+required>
+
+
+<br>
+
+
+<button 
+type="button"
+id="payBtn"
+class="btn btn-success">
+
+Continue to Payment
+
+</button>
+
+
+</form>
+
+
+
+
+<script>
+
+document.getElementById("payBtn")
+.addEventListener("click", async()=>{
+
+
+const listingId = "<%= listing._id %>";
+
+const checkIn =
+document.getElementById("checkIn").value;
+
+
+const checkOut =
+document.getElementById("checkOut").value;
+
+
+
+const response = await fetch(
+`/payments/create-order/${listingId}`,
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+checkIn,
+checkOut,
+guests: document.getElementById("guests").value,
+})
+
+});
+
+
+const data = await response.json();
+
+
+const options = {
+
+    key: data.key,
+    amount: data.amount,
+    currency: "INR",
+    name: "Rentora",
+    description: "Booking Payment",
+    order_id: data.orderId,
+
+    handler: async function(response) {
+
+        const verify = await fetch("/payments/verify", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+                bookingId: data.bookingId
+            })
+        });
+
+        const result = await verify.json();
+
+        if(result.success){
+            window.location.href =
+                `/payments/${result.paymentId}/receipt`;
+        }
+        else{
+            alert("Payment verification failed!");
+        }
+    }
+
+};
+
+const rzp = new Razorpay(options);
+rzp.open();
+});
+
+</script>

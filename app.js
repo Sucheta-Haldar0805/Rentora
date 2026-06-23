@@ -14,11 +14,15 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
+const Booking = require("./models/booking.js");
+const Payment = require("./utils/razorpay.js");
 
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 const staticRoutes = require("./routes/static.js");
+const bookingRouter = require("./routes/booking.js");
+const paymentRouter = require("./routes/razorpay.js");
 
 
 const dbUrl = process.env.ATLASDB_URL;
@@ -90,6 +94,9 @@ app.use("/listings" , listingRouter);
 app.use("/listings/:id/reviews" , reviewRouter);
 app.use("/",userRouter);
 app.use("/", staticRoutes);
+app.use("/payments", paymentRouter);
+app.use("/listings",bookingRouter);
+
 
 app.use((req,res,next) => {
     next(new ExpressError(404, "Page not found!"));

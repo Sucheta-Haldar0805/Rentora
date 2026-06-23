@@ -1,0 +1,171 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+.receipt-container {
+    max-width: 700px;
+    margin: 30px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+
+.receipt-header {
+    text-align: center;
+    border-bottom: 2px solid #28a745;
+    padding-bottom: 15px;
+}
+
+.receipt-header h1 {
+    color: #28a745;
+    margin-bottom: 5px;
+}
+
+.success {
+    color: green;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.section-title {
+    margin-top: 25px;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 8px;
+}
+
+.details {
+    margin-top: 10px;
+}
+
+.details p {
+    display: flex;
+    justify-content: space-between;
+    margin: 12px 0;
+    font-size: 16px;
+}
+
+.footer {
+    margin-top: 30px;
+    text-align: center;
+    color: #666;
+}
+
+.icon {
+    font-size: 40px;
+}
+</style>
+
+
+<div class="receipt-container">
+
+    <div class="receipt-header">
+
+        <div class="icon">
+            ✅
+        </div>
+
+        <h1>Rentora</h1>
+
+        <p>
+            Payment Receipt
+        </p>
+
+        <p class="success">
+            Payment Successful
+        </p>
+
+    </div>
+
+
+    <h3 class="section-title">
+        Transaction Details
+    </h3>
+
+    <div class="details">
+
+        <p>
+            <span>Payment ID</span>
+            <span><%= payment.paymentId %></span>
+        </p>
+
+        <p>
+            <span>Order ID</span>
+            <span><%= payment.orderId %></span>
+        </p>
+
+        <p>
+            <span>Amount Paid</span>
+            <span>₹<%= payment.amount %></span>
+        </p>
+
+        <p>
+            <span>Date</span>
+            <span>
+                <%= payment.paidAt.toDateString() %>
+            </span>
+        </p>
+
+    </div>
+
+
+    <h3 class="section-title">
+        Booking Details
+    </h3>
+
+
+    <div class="details">
+
+        <p>
+            <span>Property</span>
+            <span>
+                <%= payment.listing.title %>
+            </span>
+        </p>
+
+        <p>
+            <span>Guest</span>
+            <span>
+                <%= payment.user.username %>
+            </span>
+        </p>
+
+        <p>
+            <span>Check In</span>
+            <span>
+                <%= payment.booking.checkIn.toDateString() %>
+            </span>
+        </p>
+
+        <p>
+            <span>Check Out</span>
+            <span>
+                <%= payment.booking.checkOut.toDateString() %>
+            </span>
+        </p>
+
+        <p>
+            <span>Status</span>
+            <span>
+                <%= payment.status %>
+            </span>
+        </p>
+
+    </div>
+
+
+    <div class="footer">
+
+        <hr>
+
+        <p>
+            Thank you for choosing Rentora ❤️
+        </p>
+
+        <p>
+            This is a computer-generated receipt.
+        </p>
+
+    </div>
+
+</div>
