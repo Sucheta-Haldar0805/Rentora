@@ -9,9 +9,11 @@ exports.renderBookingForm = async (req, res) => {
   res.render("bookings/new", { listing });
 };
 exports.createOrder = async (req, res) => {
+  console.log("KEY:", process.env.RAZORPAY_KEY_ID); // ← add this
+  console.log("SECRET:", process.env.RAZORPAY_KEY_SECRET);
   try {
     const { listingId } = req.params;
-    const { checkIn, checkOut } = req.body;
+    const { checkIn, checkOut, guests } = req.body; // ✅ FIXED
 
     const listing = await Listing.findById(listingId);
 
@@ -19,27 +21,20 @@ exports.createOrder = async (req, res) => {
     const end = new Date(checkOut);
 
     const nights = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
-    if (nights <= 0) {
-      req.flash("error", "Invalid booking dates");
-      return res.redirect(`/listings/${listingId}`);
-    }
 
-    const subtotal = nights * listing.price;
+    const totalAmount = nights * listing.price;
 
-const taxes = Math.round(subtotal * 0.18); // 18% GST
-
-const totalAmount = subtotal + taxes;
-    console.log(req.body);
     const booking = new Booking({
-    listing: listing._id,
-    user: req.user._id,
-    checkIn,
-    checkOut,
-    guests,
-    totalPrice: totalAmount
+      listing: listing._id,
+      user: req.user._id,
+      checkIn,
+      checkOut,
+      guests,
+      totalPrice: totalAmount,
+      status: "pending"
     });
 
-await booking.save();
+    await booking.save();
 
     const order = await razorpay.orders.create({
       amount: totalAmount * 100,
@@ -47,15 +42,15 @@ await booking.save();
       receipt: booking._id.toString(),
     });
 
-    res.json({
+    return res.json({
       orderId: order.id,
-      amount: totalAmount,
+      amount: totalAmount * 100,
       bookingId: booking._id,
-      key: process.env.RAZORPAY_KEY_ID,
+      key: process.env.RAZORPAY_KEY_ID
     });
 
   } catch (err) {
-    console.log(err);
+    console.log("CREATE ORDER ERROR:", err); // 👈 IMPORTANT
     res.status(500).send("Payment error");
   }
 };

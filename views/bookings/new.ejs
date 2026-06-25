@@ -39,7 +39,7 @@ required>
          const listingId = "<%= listing._id %>"; 
          const checkIn = document.getElementById("checkIn").value;
           const checkOut = document.getElementById("checkOut").value;
-           const response = await fetch( /payments/create-order/${listingId}, 
+           const response = await fetch(`/payments/create-order/${listingId}`,
            { method:"POST", headers:{ "Content-Type":"application/json" }, 
            body:JSON.stringify({ checkIn, checkOut, 
             guests: document.getElementById("guests").value, }) }); const data = await response.json();
@@ -67,7 +67,7 @@ required>
                     });
                             const result = await verify.json(); 
                            if(result.success){
-                             window.location.href = /payments/${result.paymentId}/receipt;
+                             window.location.href =`/payments/${result.paymentId}/receipt`;
                              } 
             else {      
                  alert("Payment verification failed!");
