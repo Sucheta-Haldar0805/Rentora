@@ -1,4 +1,8 @@
 {
+  
+    "engines": {
+      "node" : "v22.19.0"
+    },
   "name": "class-major-project",
   "version": "1.0.0",
   "description": "",

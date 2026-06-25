@@ -95,7 +95,13 @@ module.exports.createListing = async (req, res) => {
     `https://api.maptiler.com/geocoding/${encodeURIComponent(location + ", " + country)}.json?key=${process.env.MAPTILER_API_KEY}`
   );
 
-  const coords = geoRes.data.features[0]?.geometry?.coordinates || [0, 0];
+
+const features = geoRes.data.features;
+if (!features || features.length === 0) {
+  req.flash("error", "Location not found. Please enter a valid location.");
+  return res.redirect("/listings/new");
+}
+const coords = features[0].geometry.coordinates;
 
   const newListing = new Listing({
     ...req.body.listing,
@@ -140,6 +146,7 @@ module.exports.renderEditForm = async (req,res) => {
     originalImageUrl = originalImageUrl.replace("/upload","/upload/w_250");
     res.render("listings/edit.ejs" , {listing , originalImageUrl });
 };
+/*
 module.exports.updateListing = async(req,res) => {
      let {id} = req.params;
      let listing = await Listing.findByIdAndUpdate( id , {...req.body.listing});
@@ -153,6 +160,35 @@ module.exports.updateListing = async(req,res) => {
      }
      req.flash("success" , "Listing Updated!");
      res.redirect(`/listings/${id}`);
+};*/
+
+module.exports.updateListing = async (req, res) => {
+  let { id } = req.params;
+  const { location, country } = req.body.listing;
+
+  // Re-geocode on update
+  const geoRes = await axios.get(
+    `https://api.maptiler.com/geocoding/${encodeURIComponent(location + ", " + country)}.json?key=${process.env.MAPTILER_API_KEY}`
+  );
+
+  const features = geoRes.data.features;
+  let coords = [0, 0];
+  if (features && features.length > 0) {
+    coords = features[0].geometry.coordinates;
+  }
+
+  let listing = await Listing.findByIdAndUpdate(id, {
+    ...req.body.listing,
+    geometry: { type: "Point", coordinates: coords }
+  }, { new: true });
+
+  if (typeof req.file !== "undefined") {
+    listing.image = { url: req.file.path, filename: req.file.filename };
+    await listing.save();
+  }
+
+  req.flash("success", "Listing Updated!");
+  res.redirect(`/listings/${id}`);
 };
 module.exports.destroyListing = async(req,res) => {
     let { id } = req.params;
