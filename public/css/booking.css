@@ -27,3 +27,24 @@
   background: #e03150;
   transform: scale(1.03);
 }
+
+
+/* Light theme (default) */
+input[type="date"] {
+  color-scheme: light;
+}
+
+/* Dark theme */
+.dark-theme input[type="date"] {
+  color-scheme: dark;
+  background-color: #1e1e1e;
+  color: #ffffff;
+  border: 1px solid #444;
+}
+
+/* Focus style */
+input[type="date"]:focus {
+  outline: none;
+  border: 2px solid #28a745;
+  box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+}

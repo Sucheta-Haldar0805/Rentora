@@ -19,8 +19,16 @@ exports.createOrder = async (req, res) => {
     const end = new Date(checkOut);
 
     const nights = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+    if (nights <= 0) {
+      req.flash("error", "Invalid booking dates");
+      return res.redirect(`/listings/${listingId}`);
+    }
 
-    const totalAmount = nights * listing.price;
+    const subtotal = nights * listing.price;
+
+const taxes = Math.round(subtotal * 0.18); // 18% GST
+
+const totalAmount = subtotal + taxes;
     console.log(req.body);
     const booking = new Booking({
     listing: listing._id,
@@ -32,8 +40,6 @@ exports.createOrder = async (req, res) => {
     });
 
 await booking.save();
-
-    await booking.save();
 
     const order = await razorpay.orders.create({
       amount: totalAmount * 100,

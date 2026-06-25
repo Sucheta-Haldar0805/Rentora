@@ -126,23 +126,6 @@ loveButtons.forEach(btn => {
 });
 
 
-// Tax ON/OFF feature
-const taxSwitch = document.getElementById("switchCheckDefault");
-
-if (taxSwitch) {
-
-    function updateTaxDisplay() {
-        document.querySelectorAll(".gst-price").forEach(el => {
-            el.classList.toggle("d-none", !taxSwitch.checked);
-        });
-    }
-
-    taxSwitch.addEventListener("change", updateTaxDisplay);
-
-    // Maintain correct state after page load
-    updateTaxDisplay();
-}
-
 
 // Search & Filter Dropdown
 document.addEventListener("DOMContentLoaded", () => {
