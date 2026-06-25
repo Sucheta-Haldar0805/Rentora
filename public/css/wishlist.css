@@ -47,3 +47,10 @@
      object-fit:cover; 
 } 
 
+.nav-heart {
+    color:  #ff385c !important;
+    -webkit-text-stroke: 1.5px #ff385c;
+    font-size: 1rem !important;
+    line-height: 1 !important;
+    vertical-align: middle;
+}

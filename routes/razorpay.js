@@ -2,13 +2,39 @@ const express = require("express");
 const router = express.Router();
 
 const paymentController = require("../controllers/razorpay");
+const { isLoggedIn } = require("../middleware.js");
 
-router.post("/create-order/:listingId", paymentController.createOrder);
+// create razorpay order
+router.post(
+    "/create-order/:listingId",
+    isLoggedIn,
+    paymentController.createOrder
+);
 
-router.post("/verify-payment", paymentController.verifyPayment);
+
+// verify payment
+router.post(
+    "/verify",
+    isLoggedIn,
+    paymentController.verifyPayment
+);
+
+
+// show receipt page
 router.get(
-  "/:paymentId/receipt",
-  paymentController.showReceipt
+    "/:paymentId/receipt",
+    isLoggedIn,
+    paymentController.showReceipt
+);
+
+
+// download PDF receipt
+router.get(
+    "/:id/pdf",
+    isLoggedIn,
+    paymentController.downloadReceiptPDF
 );
 
 module.exports = router;
+
+

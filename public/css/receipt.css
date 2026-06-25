@@ -1,0 +1,117 @@
+.receipt-container {
+    max-width: 700px;
+    margin: 30px auto;
+    background: #fff;
+    color: #212529;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+
+.receipt-header {
+    text-align: center;
+    border-bottom: 2px solid #28a745;
+    padding-bottom: 15px;
+}
+
+.receipt-header h1 {
+    color: #28a745;
+    margin-bottom: 5px;
+}
+
+.receipt-header p {
+    color: #212529;
+}
+
+.success {
+    color: #28a745;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.section-title {
+    margin-top: 25px;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 8px;
+}
+
+.details {
+    margin-top: 10px;
+}
+
+.details p {
+    display: flex;
+    justify-content: space-between;
+    margin: 12px 0;
+    font-size: 16px;
+    color: #212529;
+}
+
+.details span {
+    color: #212529;
+}
+
+.footer {
+    margin-top: 30px;
+    text-align: center;
+    color: #666;
+}
+
+.footer p {
+    color: #666;
+}
+
+.icon {
+    font-size: 55px;
+    color: #28a745;
+}
+
+.footer .bi-heart-fill {
+    color: #ff385c;
+    font-size: 18px;
+}
+
+/* ===== Dark Theme Override ===== */
+
+.dark-theme .receipt-container {
+    background: #fff !important;
+    color: #212529 !important;
+}
+
+.dark-theme .receipt-container p,
+.dark-theme .receipt-container span,
+.dark-theme .receipt-container div,
+.dark-theme .receipt-container h1,
+.dark-theme .receipt-container h2,
+.dark-theme .receipt-container h3 {
+    color: #212529 !important;
+}
+
+.dark-theme .receipt-header h1 {
+    color: #28a745 !important;
+}
+
+.dark-theme .success {
+    color: #28a745 !important;
+}
+
+.dark-theme .section-title {
+    color: #333 !important;
+}
+
+.dark-theme .footer {
+    color: #666 !important;
+}
+
+.dark-theme .footer p {
+    color: #666 !important;
+}
+
+.dark-theme .icon {
+    color: #28a745 !important;
+}
+
+.dark-theme .footer .bi-heart-fill {
+    color: #ff385c !important;
+}
